@@ -5,9 +5,18 @@ import io.swagger.v3.oas.models.info.Info;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Configuração do OpenAPI/Swagger para a API do posto de abastecimento.
+ * Define título, descrição e versão da documentação gerada.
+ */
 @Configuration
 public class OpenApiConfig {
 
+    /**
+     * Cria o bean {@link OpenAPI} customizado com informações da API.
+     *
+     * @return instância configurada de {@link OpenAPI}
+     */
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()

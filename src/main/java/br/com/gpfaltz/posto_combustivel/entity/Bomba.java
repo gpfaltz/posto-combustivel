@@ -3,6 +3,10 @@ package br.com.gpfaltz.posto_combustivel.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Entidade JPA que representa uma bomba de combustível.
+ * Cada bomba está associada a um {@link Combustivel}.
+ */
 @Entity
 @Data
 @NoArgsConstructor

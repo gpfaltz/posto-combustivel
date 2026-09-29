@@ -5,6 +5,10 @@ import lombok.*;
 import java.time.LocalDate;
 import java.math.BigDecimal;
 
+/**
+ * Entidade JPA que representa um registro de abastecimento.
+ * Relaciona uma {@link Bomba} a um volume de combustível em uma data.
+ */
 @Entity
 @Data
 @NoArgsConstructor

@@ -8,6 +8,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
+/**
+ * Controller REST para gerenciamento de bombas.
+ *
+ * Endpoints disponíveis:
+ * <ul>
+ *   <li>POST   /api/bombas</li>
+ *   <li>GET    /api/bombas</li>
+ *   <li>GET    /api/bombas/{id}</li>
+ *   <li>PUT    /api/bombas/{id}</li>
+ *   <li>DELETE /api/bombas/{id}</li>
+ * </ul>
+ *
+ * @example
+ * curl -X POST http://localhost:8080/api/bombas \
+ *      -H "Content-Type: application/json" \
+ *      -d '{"nome":"Bomba 1","combustivelId":1}'
+ */
 @RestController
 @RequestMapping("/api/bombas")
 public class BombaController {

@@ -12,9 +12,13 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Serviço de negócio para operações relacionadas a {@link Combustivel}.
+ * Responsável por orquestrar persistência e regras de negócio.
+ */
 @Service
 public class CombustivelService {
-	
+    
     private final CombustivelRepository repository;
     private final BombaRepository bombaRepository;
     private final ModelMapper mapper = new ModelMapper();
@@ -24,24 +28,50 @@ public class CombustivelService {
         this.bombaRepository = bombaRepository;
     }
 
+    /**
+     * Cria um novo registro de combustível.
+     *
+     * @param request DTO contendo nome e preço por litro
+     * @return DTO de resposta com os dados persistidos
+     */
     public CombustivelResponse create(CombustivelRequest request) {
         Combustivel entity = mapper.map(request, Combustivel.class);
         Combustivel saved = repository.save(entity);
         return mapper.map(saved, CombustivelResponse.class);
     }
 
+    /**
+     * Recupera todos os combustíveis cadastrados.
+     *
+     * @return lista de DTOs de resposta
+     */
     public List<CombustivelResponse> getAll() {
         return repository.findAll().stream()
                 .map(c -> mapper.map(c, CombustivelResponse.class))
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Busca um combustível pelo seu identificador.
+     *
+     * @param id identificador do combustível
+     * @return DTO de resposta
+     * @throws ResourceNotFoundException se o combustível não for encontrado
+     */
     public CombustivelResponse getById(Long id) {
         Combustivel entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Combustível não encontrado"));
         return mapper.map(entity, CombustivelResponse.class);
     }
 
+    /**
+     * Atualiza os dados de um combustível existente.
+     *
+     * @param id      identificador do combustível a ser atualizado
+     * @param request DTO contendo os novos valores
+     * @return DTO de resposta com os dados atualizados
+     * @throws ResourceNotFoundException se o combustível não existir
+     */
     public CombustivelResponse update(Long id, CombustivelRequest request) {
         Combustivel entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Combustível não encontrado"));
@@ -51,6 +81,13 @@ public class CombustivelService {
         return mapper.map(saved, CombustivelResponse.class);
     }
 
+    /**
+     * Remove um combustível, verificando se há bombas associadas.
+     *
+     * @param id identificador do combustível a ser excluído
+     * @throws ResourceNotFoundException se o combustível não existir
+     * @throws IllegalStateException    se houver bombas associadas ao combustível
+     */
     public void delete(Long id) {
         if (!repository.existsById(id)) {
             throw new ResourceNotFoundException("Combustível não encontrado");

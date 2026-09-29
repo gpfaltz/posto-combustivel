@@ -14,9 +14,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.math.BigDecimal;
 
+/**
+ * Serviço de negócio para operações de {@link Abastecimento}.
+ * Responsável por criar, consultar, atualizar e remover registros de abastecimento,
+ * calculando o valor total (preço por litro * volume).
+ */
 @Service
 public class AbastecimentoService {
-	
+
     private final AbastecimentoRepository abastecimentoRepo;
     private final BombaRepository bombaRepo;
     private final ModelMapper mapper = new ModelMapper();
@@ -26,6 +31,13 @@ public class AbastecimentoService {
         this.bombaRepo = bombaRepo;
     }
 
+    /**
+     * Cria um novo registro de abastecimento.
+     *
+     * @param request DTO contendo ID da bomba, data e volume
+     * @return DTO de resposta com detalhes da bomba, preço por litro e valor total
+     * @throws ResourceNotFoundException se a bomba informada não existir
+     */
     public AbastecimentoResponse create(AbastecimentoRequest request) {
         Bomba bomba = bombaRepo.findById(request.getBombaId())
                 .orElseThrow(() -> new ResourceNotFoundException("Bomba não encontrado"));
@@ -45,6 +57,11 @@ public class AbastecimentoService {
         return resp;
     }
 
+    /**
+     * Recupera todos os registros de abastecimento.
+     *
+     * @return lista de DTOs de resposta contendo informações da bomba e preço por litro
+     */
     public List<AbastecimentoResponse> getAll() {
         return abastecimentoRepo.findAll().stream()
                 .map(a -> {
@@ -59,6 +76,13 @@ public class AbastecimentoService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Busca um registro de abastecimento pelo seu identificador.
+     *
+     * @param id identificador do registro
+     * @return DTO de resposta completo
+     * @throws ResourceNotFoundException se o registro não for encontrado
+     */
     public AbastecimentoResponse getById(Long id) {
         Abastecimento a = abastecimentoRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Abastecimento não encontrado"));
@@ -71,6 +95,14 @@ public class AbastecimentoService {
         return r;
     }
 
+    /**
+     * Atualiza um registro de abastecimento existente.
+     *
+     * @param id      identificador do registro a ser atualizado
+     * @param request DTO contendo novos valores
+     * @return DTO de resposta com os dados atualizados
+     * @throws ResourceNotFoundException se a bomba ou o registro não existirem
+     */
     public AbastecimentoResponse update(Long id, AbastecimentoRequest request) {
         Abastecimento a = abastecimentoRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Abastecimento não encontrado"));
@@ -89,6 +121,12 @@ public class AbastecimentoService {
         return r;
     }
 
+    /**
+     * Remove um registro de abastecimento.
+     *
+     * @param id identificador do registro a ser removido
+     * @throws ResourceNotFoundException se o registro não existir
+     */
     public void delete(Long id) {
         if (!abastecimentoRepo.existsById(id)) {
             throw new ResourceNotFoundException("Abastecimento não encontrado");
