@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class CombustivelService {
 	
     private final CombustivelRepository repository;
-    private final BombaRepository bombaRepository; // to verify dependent bombas
+    private final BombaRepository bombaRepository;
     private final ModelMapper mapper = new ModelMapper();
 
     public CombustivelService(CombustivelRepository repository, BombaRepository bombaRepository) {
@@ -55,12 +55,13 @@ public class CombustivelService {
         if (!repository.existsById(id)) {
             throw new ResourceNotFoundException("Combustível não encontrado");
         }
-        // Prevent deletion if any Bomba references this Combustivel
+        // Previne deleção se houver bombas associadas ao combustível
         boolean hasBomba = bombaRepository.existsByCombustivelId(id);
         if (hasBomba) {
-            // Mensagem em português (Brasil) informando que a exclusão não é permitida
+            // Mensagem informando que a exclusão não é permitida
             throw new IllegalStateException("Não é possível excluir Combustível porque há Bomba(s) associada(s).");
         }
+        // Procede com a exclusão do combustível
         repository.deleteById(id);
     }
 }

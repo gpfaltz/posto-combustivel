@@ -1,6 +1,8 @@
 package br.com.gpfaltz.posto_combustivel.exception;
 
 public class ResourceNotFoundException extends RuntimeException {
+	private static final long serialVersionUID = 1L;
+
 	public ResourceNotFoundException(String message) {
 		super(message);
 	}

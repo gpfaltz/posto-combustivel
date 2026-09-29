@@ -22,9 +22,9 @@ public class Abastecimento {
     @Column(nullable = false)
     private LocalDate data;
 
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(nullable = false, precision = 10, scale = 3)
     private BigDecimal volume;
 
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(nullable = false, precision = 10, scale = 3)
     private BigDecimal valorTotal;
 }
