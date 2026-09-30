@@ -1,5 +1,0 @@
-# Created at 2026-09-30T11:35:14.158
-Boot Manifest-JAR contains absolute paths in classpath 'D:\Projetos\posto-combustivel\target\test-classes'
-Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
-'other' has different root
-
