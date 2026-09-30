@@ -71,3 +71,107 @@ Desenvolver uma aplicação simples em **Java** para cadastro e consulta de abas
 - Mesmo que não finalize 100% dos requisitos, **a qualidade do seu processo será levada em conta**.
 
 ---
+
+## 🛠 Tecnologias Utilizadas
+
+- **Java 17**
+- **Spring Boot 3.5.16**
+- **Spring Web**, **Spring Data JPA**, **Spring Validation**
+- **H2 Database** (em memória, runtime)
+- **Lombok**
+- **ModelMapper**
+- **SpringDoc OpenAPI** (Swagger UI)
+- **Maven** para gerenciamento de dependências e build
+
+## 📂 Estrutura do Projeto
+
+```
+src/main/java/br/com/gpfaltz/posto_combustivel/
+├─ config/          → OpenApiConfig (Swagger)
+├─ controller/      → CombustivelController, BombaController, AbastecimentoController
+├─ dto/
+│   ├─ request/    → CombustivelRequest, BombaRequest, AbastecimentoRequest
+│   └─ response/   → CombustivelResponse, BombaResponse, AbastecimentoResponse
+├─ entity/          → Combustivel, Bomba, Abastecimento (JPA)
+├─ exception/      → GlobalExceptionHandler, ResourceNotFoundException
+├─ repository/     → JPA repositories (CombustivelRepository, BombaRepository, AbastecimentoRepository)
+├─ service/         → Camada de negócio (CombustivelService, BombaService, AbastecimentoService)
+└─ PostoAbastecimentoApplication.java (classe principal)
+```
+
+## 📋 Pré‑requisitos
+
+- JDK **17** instalado e configurado no `PATH`.
+- **Maven 3.9+** instalado.
+- (Opcional) IDE como IntelliJ IDEA, VS Code ou Eclipse.
+
+## ⚙️ Configuração do Projeto
+
+O projeto utiliza o **Spring Boot** com configuração padrão. As dependências estão declaradas em `pom.xml`, incluindo:
+- `spring-boot-starter-web`
+- `spring-boot-starter-data-jpa`
+- `h2` (banco em memória)
+- `lombok`
+- `modelmapper`
+- `springdoc-openapi-starter-webmvc-ui`
+
+Não há necessidade de arquivos `application.properties` adicionais; o Spring Boot cria o datasource H2 automaticamente. Caso queira acessar o console H2, habilite em `src/main/resources/application.properties`:
+```
+spring.h2.console.enabled=true
+spring.datasource.url=jdbc:h2:mem:testdb
+```
+
+## ▶️ Como rodar localmente
+
+```bash
+# Clonar o repositório
+git clone <url-do-repositorio>
+cd vaga-junior
+
+# Compilar e executar
+mvn clean install
+mvn spring-boot:run
+# ou, usando o jar gerado
+java -jar target/posto-combustivel-0.0.1-SNAPSHOT.jar
+```
+A aplicação será iniciada em `http://localhost:8080`.
+
+## 🧪 Como testar
+
+### Swagger UI
+Acesse a documentação interativa em:
+```
+http://localhost:8080/swagger-ui.html
+```
+
+### Exemplos de requisições cURL
+#### Combustível
+```bash
+# Criar
+curl -X POST http://localhost:8080/api/combustiveis \
+  -H "Content-Type: application/json" \
+  -d '{"nome":"Álcool","precoPorLitro":3.59}'
+
+# Listar
+curl http://localhost:8080/api/combustiveis
+```
+#### Bomba
+```bash
+# Criar (assumindo que o combustível com id 1 existe)
+curl -X POST http://localhost:8080/api/bombas \
+  -H "Content-Type: application/json" \
+  -d '{"nome":"Bomba 1","combustivelId":1}'
+```
+#### Abastecimento
+```bash
+# Criar (assumindo bomba id 1)
+curl -X POST http://localhost:8080/api/abastecimentos \
+  -H "Content-Type: application/json" \
+  -d '{"bombaId":1,"data":"2023-01-01","volume":50.0}'
+```
+
+### Testes automatizados
+Execute os testes unitários (se houver) com:
+```bash
+mvn test
+```
