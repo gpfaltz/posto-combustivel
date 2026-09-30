@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbastecimentoService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">posto-combustivel</a> &gt; <a href="index.source.html" class="el_package">br.com.gpfaltz.posto_combustivel.service</a> &gt; <span class="el_source">AbastecimentoService.java</span></div><h1>AbastecimentoService.java</h1><pre class="source lang-java linenums">package br.com.gpfaltz.posto_combustivel.service;
+
+import br.com.gpfaltz.posto_combustivel.dto.request.AbastecimentoRequest;
+import br.com.gpfaltz.posto_combustivel.dto.response.AbastecimentoResponse;
+import br.com.gpfaltz.posto_combustivel.entity.Abastecimento;
+import br.com.gpfaltz.posto_combustivel.entity.Bomba;
+import br.com.gpfaltz.posto_combustivel.exception.ResourceNotFoundException;
+import br.com.gpfaltz.posto_combustivel.repository.AbastecimentoRepository;
+import br.com.gpfaltz.posto_combustivel.repository.BombaRepository;
+
+import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.math.BigDecimal;
+
+/**
+ * Serviço de negócio para operações de {@link Abastecimento}.
+ * Responsável por criar, consultar, atualizar e remover registros de abastecimento,
+ * calculando o valor total (preço por litro * volume).
+ */
+@Service
+public class AbastecimentoService {
+
+    private final AbastecimentoRepository abastecimentoRepo;
+    private final BombaRepository bombaRepo;
+
+<span class="fc" id="L27">    public AbastecimentoService(AbastecimentoRepository abastecimentoRepo, BombaRepository bombaRepo) {</span>
+<span class="fc" id="L28">        this.abastecimentoRepo = abastecimentoRepo;</span>
+<span class="fc" id="L29">        this.bombaRepo = bombaRepo;</span>
+<span class="fc" id="L30">    }</span>
+
+    /**
+     * Cria um novo registro de abastecimento.
+     *
+     * @param request DTO contendo ID da bomba, data e volume
+     * @return DTO de resposta com detalhes da bomba, preço por litro e valor total
+     * @throws ResourceNotFoundException se a bomba informada não existir
+     */
+    public AbastecimentoResponse create(AbastecimentoRequest request) {
+<span class="fc" id="L40">        Bomba bomba = bombaRepo.findById(request.bombaId())</span>
+<span class="fc" id="L41">                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Bomba não encontrado&quot;));</span>
+<span class="fc" id="L42">        Abastecimento abastecimento = new Abastecimento();</span>
+<span class="fc" id="L43">        abastecimento.setBomba(bomba);</span>
+<span class="fc" id="L44">        abastecimento.setData(request.data());</span>
+<span class="fc" id="L45">        abastecimento.setVolume(request.volume());</span>
+        // Calculate total value = price per liter * volume
+<span class="fc" id="L47">        BigDecimal total = bomba.getCombustivel().getPrecoPorLitro().multiply(request.volume());</span>
+<span class="fc" id="L48">        abastecimento.setValorTotal(total);</span>
+<span class="fc" id="L49">        Abastecimento saved = abastecimentoRepo.save(abastecimento);</span>
+<span class="fc" id="L50">        return new AbastecimentoResponse(</span>
+<span class="fc" id="L51">                saved.getId(),</span>
+<span class="fc" id="L52">                bomba.getId(),</span>
+<span class="fc" id="L53">                bomba.getNome(),</span>
+<span class="fc" id="L54">                saved.getData(),</span>
+<span class="fc" id="L55">                bomba.getCombustivel().getPrecoPorLitro(),</span>
+<span class="fc" id="L56">                saved.getVolume(),</span>
+<span class="fc" id="L57">                saved.getValorTotal()</span>
+        );
+    }
+
+    /**
+     * Recupera todos os registros de abastecimento.
+     *
+     * @return lista de DTOs de resposta contendo informações da bomba e preço por litro
+     */
+    public List&lt;AbastecimentoResponse&gt; getAll() {
+<span class="fc" id="L67">        return abastecimentoRepo.findAll().stream()</span>
+<span class="fc" id="L68">                .map(a -&gt; {</span>
+<span class="fc" id="L69">                    Bomba b = a.getBomba();</span>
+<span class="fc" id="L70">                    return new AbastecimentoResponse(</span>
+<span class="fc" id="L71">                            a.getId(),</span>
+<span class="fc" id="L72">                            b.getId(),</span>
+<span class="fc" id="L73">                            b.getNome(),</span>
+<span class="fc" id="L74">                            a.getData(),</span>
+<span class="fc" id="L75">                            b.getCombustivel().getPrecoPorLitro(),</span>
+<span class="fc" id="L76">                            a.getVolume(),</span>
+<span class="fc" id="L77">                            a.getValorTotal()</span>
+                    );
+                })
+<span class="fc" id="L80">                .collect(Collectors.toList());</span>
+    }
+
+    /**
+     * Busca um registro de abastecimento pelo seu identificador.
+     *
+     * @param id identificador do registro
+     * @return DTO de resposta completo
+     * @throws ResourceNotFoundException se o registro não for encontrado
+     */
+    public AbastecimentoResponse getById(Long id) {
+<span class="fc" id="L91">        Abastecimento a = abastecimentoRepo.findById(id)</span>
+<span class="fc" id="L92">                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Abastecimento não encontrado&quot;));</span>
+<span class="fc" id="L93">        Bomba b = a.getBomba();</span>
+<span class="fc" id="L94">        return new AbastecimentoResponse(</span>
+<span class="fc" id="L95">                a.getId(),</span>
+<span class="fc" id="L96">                b.getId(),</span>
+<span class="fc" id="L97">                b.getNome(),</span>
+<span class="fc" id="L98">                a.getData(),</span>
+<span class="fc" id="L99">                b.getCombustivel().getPrecoPorLitro(),</span>
+<span class="fc" id="L100">                a.getVolume(),</span>
+<span class="fc" id="L101">                a.getValorTotal()</span>
+        );
+    }
+
+    /**
+     * Atualiza um registro de abastecimento existente.
+     *
+     * @param id      identificador do registro a ser atualizado
+     * @param request DTO contendo novos valores
+     * @return DTO de resposta com os dados atualizados
+     * @throws ResourceNotFoundException se a bomba ou o registro não existirem
+     */
+    public AbastecimentoResponse update(Long id, AbastecimentoRequest request) {
+<span class="fc" id="L114">        Abastecimento a = abastecimentoRepo.findById(id)</span>
+<span class="fc" id="L115">                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Abastecimento não encontrado&quot;));</span>
+<span class="fc" id="L116">        Bomba bomba = bombaRepo.findById(request.bombaId())</span>
+<span class="fc" id="L117">                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Bomba não encontrado&quot;));</span>
+<span class="fc" id="L118">        a.setBomba(bomba);</span>
+<span class="fc" id="L119">        a.setData(request.data());</span>
+<span class="fc" id="L120">        a.setVolume(request.volume());</span>
+        // Recalculate total value based on possibly changed volume or bomba
+<span class="fc" id="L122">        BigDecimal total = bomba.getCombustivel().getPrecoPorLitro().multiply(request.volume());</span>
+<span class="fc" id="L123">        a.setValorTotal(total);</span>
+<span class="fc" id="L124">        Abastecimento saved = abastecimentoRepo.save(a);</span>
+<span class="fc" id="L125">        return new AbastecimentoResponse(</span>
+<span class="fc" id="L126">                saved.getId(),</span>
+<span class="fc" id="L127">                bomba.getId(),</span>
+<span class="fc" id="L128">                bomba.getNome(),</span>
+<span class="fc" id="L129">                saved.getData(),</span>
+<span class="fc" id="L130">                bomba.getCombustivel().getPrecoPorLitro(),</span>
+<span class="fc" id="L131">                saved.getVolume(),</span>
+<span class="fc" id="L132">                saved.getValorTotal()</span>
+        );
+    }
+
+    /**
+     * Remove um registro de abastecimento.
+     *
+     * @param id identificador do registro a ser removido
+     * @throws ResourceNotFoundException se o registro não existir
+     */
+    public void delete(Long id) {
+<span class="fc bfc" id="L143" title="All 2 branches covered.">        if (!abastecimentoRepo.existsById(id)) {</span>
+<span class="fc" id="L144">            throw new ResourceNotFoundException(&quot;Abastecimento não encontrado&quot;);</span>
+        }
+<span class="fc" id="L146">        abastecimentoRepo.deleteById(id);</span>
+<span class="fc" id="L147">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

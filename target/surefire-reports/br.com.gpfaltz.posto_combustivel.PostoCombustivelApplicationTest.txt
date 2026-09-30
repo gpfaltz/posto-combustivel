@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: br.com.gpfaltz.posto_combustivel.PostoCombustivelApplicationTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.889 s -- in br.com.gpfaltz.posto_combustivel.PostoCombustivelApplicationTest

@@ -1,0 +1,17 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+posto-combustivel,br.com.gpfaltz.posto_combustivel.dto.request,AbastecimentoRequest,0,12,0,0,0,1,0,1,0,1
+posto-combustivel,br.com.gpfaltz.posto_combustivel.dto.request,BombaRequest,0,9,0,0,0,1,0,1,0,1
+posto-combustivel,br.com.gpfaltz.posto_combustivel.dto.request,CombustivelRequest,0,9,0,0,0,1,0,1,0,1
+posto-combustivel,br.com.gpfaltz.posto_combustivel.dto.response,BombaResponse,0,18,0,0,0,1,0,1,0,1
+posto-combustivel,br.com.gpfaltz.posto_combustivel.dto.response,AbastecimentoResponse,0,24,0,0,0,1,0,1,0,1
+posto-combustivel,br.com.gpfaltz.posto_combustivel.dto.response,CombustivelResponse,0,12,0,0,0,1,0,1,0,1
+posto-combustivel,br.com.gpfaltz.posto_combustivel.service,AbastecimentoService,0,228,0,2,0,66,0,12,0,11
+posto-combustivel,br.com.gpfaltz.posto_combustivel.service,CombustivelService,0,144,0,4,0,28,0,11,0,9
+posto-combustivel,br.com.gpfaltz.posto_combustivel.service,BombaService,0,195,0,4,0,51,0,13,0,11
+posto-combustivel,br.com.gpfaltz.posto_combustivel,PostoCombustivelApplication,5,3,0,0,2,1,1,1,1,1
+posto-combustivel,br.com.gpfaltz.posto_combustivel.exception,GlobalExceptionHandler,0,41,0,0,0,7,0,5,0,5
+posto-combustivel,br.com.gpfaltz.posto_combustivel.exception,ResourceNotFoundException,0,4,0,0,0,2,0,1,0,1
+posto-combustivel,br.com.gpfaltz.posto_combustivel.config,OpenApiConfig,0,17,0,0,0,6,0,2,0,2
+posto-combustivel,br.com.gpfaltz.posto_combustivel.controller,AbastecimentoController,0,37,0,0,0,9,0,6,0,6
+posto-combustivel,br.com.gpfaltz.posto_combustivel.controller,CombustivelController,0,37,0,0,0,9,0,6,0,6
+posto-combustivel,br.com.gpfaltz.posto_combustivel.controller,BombaController,0,37,0,0,0,9,0,6,0,6

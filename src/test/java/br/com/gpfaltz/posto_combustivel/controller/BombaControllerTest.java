@@ -50,4 +50,46 @@ class BombaControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1));
     }
+
+    @Test
+    void getById_ShouldReturnResponse() throws Exception {
+        Long id = 1L;
+        BombaResponse mockResponse = new BombaResponse(id, "Bomba X", 1L, "Álcool", new BigDecimal("3.50"));
+        Mockito.when(service.getById(id)).thenReturn(mockResponse);
+        mockMvc.perform(get("/api/bombas/" + id))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(id.intValue()));
+        Mockito.verify(service).getById(id);
+    }
+
+    @Test
+    void update_ShouldReturnResponse() throws Exception {
+        Long id = 1L;
+        BombaRequest request = new BombaRequest("Bomba X Updated", 1L);
+        BombaResponse mockResponse = new BombaResponse(id, "Bomba X Updated", 1L, "Álcool", new BigDecimal("3.60"));
+        Mockito.when(service.update(Mockito.eq(id), Mockito.any())).thenReturn(mockResponse);
+        mockMvc.perform(put("/api/bombas/" + id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.nome").value("Bomba X Updated"));
+        Mockito.verify(service).update(Mockito.eq(id), Mockito.any());
+    }
+
+    @Test
+    void delete_ShouldReturnNoContent() throws Exception {
+        Long id = 1L;
+        mockMvc.perform(delete("/api/bombas/" + id))
+                .andExpect(status().isNoContent());
+        Mockito.verify(service).delete(id);
+    }
+
+    @Test
+    void getAll_EmptyList_ShouldReturnEmptyArray() throws Exception {
+        Mockito.when(service.getAll()).thenReturn(Collections.emptyList());
+        mockMvc.perform(get("/api/bombas"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()").value(0));
+    }
 }

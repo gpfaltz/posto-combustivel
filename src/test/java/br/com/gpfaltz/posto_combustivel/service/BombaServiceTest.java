@@ -91,4 +91,80 @@ class BombaServiceTest {
         when(abastecimentoRepo.existsByBombaId(1L)).thenReturn(true);
         assertThrows(IllegalStateException.class, () -> service.delete(1L));
     }
+
+    @Test
+    void getById_WhenExists_ShouldReturnResponse() {
+        when(bombaRepo.findById(1L)).thenReturn(Optional.of(bomba));
+        BombaResponse resp = service.getById(1L);
+        assertEquals(bomba.getId(), resp.id());
+        assertEquals(bomba.getNome(), resp.nome());
+        assertEquals(combustivel.getId(), resp.combustivelId());
+        assertEquals(combustivel.getNome(), resp.combustivelNome());
+        assertEquals(combustivel.getPrecoPorLitro(), resp.precoPorLitro());
+    }
+
+    @Test
+    void getById_WhenNotFound_ShouldThrowException() {
+        when(bombaRepo.findById(99L)).thenReturn(Optional.empty());
+        assertThrows(ResourceNotFoundException.class, () -> service.getById(99L));
+    }
+
+    @Test
+    void update_ShouldReturnUpdatedResponse() {
+        // Existing bomba
+        Bomba existing = Bomba.builder()
+                .id(1L)
+                .nome("Bomba 1")
+                .combustivel(combustivel)
+                .build();
+        // New combustivel for update
+        Combustivel newComb = Combustivel.builder()
+                .id(2L)
+                .nome("Gasolina")
+                .precoPorLitro(new BigDecimal("4.20"))
+                .build();
+        BombaRequest request = new BombaRequest("Bomba X", 2L);
+        when(bombaRepo.findById(1L)).thenReturn(Optional.of(existing));
+        when(combustivelRepo.findById(2L)).thenReturn(Optional.of(newComb));
+        when(bombaRepo.save(any(Bomba.class))).thenAnswer(i -> {
+            Bomba b = i.getArgument(0);
+            b.setId(1L);
+            return b;
+        });
+        BombaResponse resp = service.update(1L, request);
+        assertEquals(1L, resp.id());
+        assertEquals("Bomba X", resp.nome());
+        assertEquals(newComb.getId(), resp.combustivelId());
+        assertEquals(newComb.getNome(), resp.combustivelNome());
+        assertEquals(newComb.getPrecoPorLitro(), resp.precoPorLitro());
+    }
+
+    @Test
+    void update_WhenBombaNotFound_ShouldThrow() {
+        BombaRequest request = new BombaRequest("Bomba X", 1L);
+        when(bombaRepo.findById(1L)).thenReturn(Optional.empty());
+        assertThrows(ResourceNotFoundException.class, () -> service.update(1L, request));
+    }
+
+    @Test
+    void update_WhenCombustivelNotFound_ShouldThrow() {
+        BombaRequest request = new BombaRequest("Bomba X", 99L);
+        when(bombaRepo.findById(1L)).thenReturn(Optional.of(bomba));
+        when(combustivelRepo.findById(99L)).thenReturn(Optional.empty());
+        assertThrows(ResourceNotFoundException.class, () -> service.update(1L, request));
+    }
+
+    @Test
+    void delete_WhenExistsAndNoAbastecimento_ShouldDelete() {
+        when(bombaRepo.existsById(1L)).thenReturn(true);
+        when(abastecimentoRepo.existsByBombaId(1L)).thenReturn(false);
+        service.delete(1L);
+        verify(bombaRepo, times(1)).deleteById(1L);
+    }
+
+    @Test
+    void delete_WhenBombaNotFound_ShouldThrow() {
+        when(bombaRepo.existsById(99L)).thenReturn(false);
+        assertThrows(ResourceNotFoundException.class, () -> service.delete(99L));
+    }
 }

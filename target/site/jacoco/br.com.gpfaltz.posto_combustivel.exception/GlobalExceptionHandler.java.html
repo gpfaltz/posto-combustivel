@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GlobalExceptionHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">posto-combustivel</a> &gt; <a href="index.source.html" class="el_package">br.com.gpfaltz.posto_combustivel.exception</a> &gt; <span class="el_source">GlobalExceptionHandler.java</span></div><h1>GlobalExceptionHandler.java</h1><pre class="source lang-java linenums">package br.com.gpfaltz.posto_combustivel.exception;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+
+/**
+ * Manipulador global de exceções da API.
+ * Converte exceções específicas em respostas HTTP adequadas.
+ */
+@ControllerAdvice
+<span class="fc" id="L17">public class GlobalExceptionHandler {</span>
+
+    /**
+     * Trata {@link ResourceNotFoundException} retornando 404.
+     *
+     * @param ex exceção capturada
+     * @return resposta com mensagem e status NOT_FOUND
+     */
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity&lt;String&gt; handleResourceNotFound(ResourceNotFoundException ex) {
+<span class="fc" id="L27">        return new ResponseEntity&lt;&gt;(ex.getMessage(), HttpStatus.NOT_FOUND);</span>
+    }
+
+    /**
+     * Trata erros de validação de argumentos de método.
+     *
+     * @param ex exceção de validação
+     * @return mapa de campos e mensagens de erro com status BAD_REQUEST
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity&lt;Map&lt;String, String&gt;&gt; handleValidationExceptions(MethodArgumentNotValidException ex) {
+<span class="fc" id="L38">        Map&lt;String, String&gt; errors = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L39">        ex.getBindingResult().getFieldErrors()</span>
+<span class="fc" id="L40">                .forEach(error -&gt; errors.put(error.getField(), error.getDefaultMessage()));</span>
+<span class="fc" id="L41">        return new ResponseEntity&lt;&gt;(errors, HttpStatus.BAD_REQUEST);</span>
+    }
+
+    /**
+     * Trata {@link IllegalStateException} retornando 409 (CONFLICT).
+     *
+     * @param ex exceção capturada
+     * @return mensagem de erro e status CONFLICT
+     */
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity&lt;String&gt; handleIllegalState(IllegalStateException ex) {
+<span class="fc" id="L52">        return new ResponseEntity&lt;&gt;(ex.getMessage(), HttpStatus.CONFLICT);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
