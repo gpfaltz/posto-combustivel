@@ -21,7 +21,7 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
             .info(new Info()
-                .title("Posto de Abastecimento API")
+                .title("Posto de Combustível API")
                 .description("API REST para cadastro e consulta de combustíveis, bombas e abastecimentos")
                 .version("1.0.0"));
     }

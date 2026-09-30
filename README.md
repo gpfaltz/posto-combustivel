@@ -125,8 +125,8 @@ spring.datasource.url=jdbc:h2:mem:testdb
 
 ```bash
 # Clonar o repositório
-git clone <url-do-repositorio>
-cd vaga-junior
+git clone https://github.com/gpfaltz/posto-combustivel.git
+cd posto-combustivel
 
 # Compilar e executar
 mvn clean install
@@ -152,8 +152,19 @@ curl -X POST http://localhost:8080/api/combustiveis \
   -H "Content-Type: application/json" \
   -d '{"nome":"Álcool","precoPorLitro":3.59}'
 
-# Listar
+# Listar todos
 curl http://localhost:8080/api/combustiveis
+
+# Buscar por ID (ex.: 1)
+curl http://localhost:8080/api/combustiveis/1
+
+# Atualizar (ex.: 1)
+curl -X PUT http://localhost:8080/api/combustiveis/1 \
+  -H "Content-Type: application/json" \
+  -d '{"nome":"Álcool","precoPorLitro":3.79}'
+
+# Deletar (ex.: 1)
+curl -X DELETE http://localhost:8080/api/combustiveis/1
 ```
 #### Bomba
 ```bash
@@ -161,6 +172,20 @@ curl http://localhost:8080/api/combustiveis
 curl -X POST http://localhost:8080/api/bombas \
   -H "Content-Type: application/json" \
   -d '{"nome":"Bomba 1","combustivelId":1}'
+
+# Listar todos
+curl http://localhost:8080/api/bombas
+
+# Buscar por ID (ex.: 1)
+curl http://localhost:8080/api/bombas/1
+
+# Atualizar (ex.: 1)
+curl -X PUT http://localhost:8080/api/bombas/1 \
+  -H "Content-Type: application/json" \
+  -d '{"nome":"Bomba 1 Atualizada","combustivelId":1}'
+
+# Deletar (ex.: 1)
+curl -X DELETE http://localhost:8080/api/bombas/1
 ```
 #### Abastecimento
 ```bash
@@ -168,6 +193,20 @@ curl -X POST http://localhost:8080/api/bombas \
 curl -X POST http://localhost:8080/api/abastecimentos \
   -H "Content-Type: application/json" \
   -d '{"bombaId":1,"data":"2023-01-01","volume":50.0}'
+
+# Listar todos
+curl http://localhost:8080/api/abastecimentos
+
+# Buscar por ID (ex.: 1)
+curl http://localhost:8080/api/abastecimentos/1
+
+# Atualizar (ex.: 1)
+curl -X PUT http://localhost:8080/api/abastecimentos/1 \
+  -H "Content-Type: application/json" \
+  -d '{"bombaId":1,"data":"2023-01-02","volume":55.0}'
+
+# Deletar (ex.: 1)
+curl -X DELETE http://localhost:8080/api/abastecimentos/1
 ```
 
 ### Testes automatizados
