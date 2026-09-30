@@ -3,7 +3,6 @@ package br.com.gpfaltz.posto_combustivel.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import br.com.gpfaltz.posto_combustivel.dto.request.BombaRequest;
@@ -27,7 +26,6 @@ public class BombaService {
     private final BombaRepository bombaRepo;
     private final CombustivelRepository combustivelRepo;
     private final AbastecimentoRepository abastecimentoRepo;
-    private final ModelMapper mapper = new ModelMapper();
 
     public BombaService(BombaRepository bombaRepo, CombustivelRepository combustivelRepo,
             AbastecimentoRepository abastecimentoRepo) {
@@ -44,16 +42,19 @@ public class BombaService {
      * @throws ResourceNotFoundException se o combustível informado não existir
      */
     public BombaResponse create(BombaRequest request) {
-        Combustivel combustivel = combustivelRepo.findById(request.getCombustivelId())
+        Combustivel combustivel = combustivelRepo.findById(request.combustivelId())
                 .orElseThrow(() -> new ResourceNotFoundException("Combustível não encontrado"));
         Bomba bomba = new Bomba();
-        bomba.setNome(request.getNome());
+        bomba.setNome(request.nome());
         bomba.setCombustivel(combustivel);
         Bomba saved = bombaRepo.save(bomba);
-        BombaResponse resp = mapper.map(saved, BombaResponse.class);
-        resp.setCombustivelNome(combustivel.getNome());
-        resp.setPrecoPorLitro(combustivel.getPrecoPorLitro());
-        return resp;
+        return new BombaResponse(
+                saved.getId(),
+                saved.getNome(),
+                combustivel.getId(),
+                combustivel.getNome(),
+                combustivel.getPrecoPorLitro()
+        );
     }
 
     /**
@@ -62,12 +63,14 @@ public class BombaService {
      * @return lista de DTOs de resposta contendo dados da bomba e do combustível associado
      */
     public List<BombaResponse> getAll() {
-        return bombaRepo.findAll().stream().map(b -> {
-            BombaResponse r = mapper.map(b, BombaResponse.class);
-            r.setCombustivelNome(b.getCombustivel().getNome());
-            r.setPrecoPorLitro(b.getCombustivel().getPrecoPorLitro());
-            return r;
-        }).collect(Collectors.toList());
+        return bombaRepo.findAll().stream()
+                .map(b -> new BombaResponse(
+                        b.getId(),
+                        b.getNome(),
+                        b.getCombustivel().getId(),
+                        b.getCombustivel().getNome(),
+                        b.getCombustivel().getPrecoPorLitro()))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -79,10 +82,12 @@ public class BombaService {
      */
     public BombaResponse getById(Long id) {
         Bomba bomba = bombaRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Bomba não encontrado"));
-        BombaResponse resp = mapper.map(bomba, BombaResponse.class);
-        resp.setCombustivelNome(bomba.getCombustivel().getNome());
-        resp.setPrecoPorLitro(bomba.getCombustivel().getPrecoPorLitro());
-        return resp;
+        return new BombaResponse(
+                bomba.getId(),
+                bomba.getNome(),
+                bomba.getCombustivel().getId(),
+                bomba.getCombustivel().getNome(),
+                bomba.getCombustivel().getPrecoPorLitro());
     }
 
     /**
@@ -95,15 +100,17 @@ public class BombaService {
      */
     public BombaResponse update(Long id, BombaRequest request) {
         Bomba bomba = bombaRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Bomba não encontrado"));
-        Combustivel combustivel = combustivelRepo.findById(request.getCombustivelId())
+        Combustivel combustivel = combustivelRepo.findById(request.combustivelId())
                 .orElseThrow(() -> new ResourceNotFoundException("Combustível não encontrado"));
-        bomba.setNome(request.getNome());
+        bomba.setNome(request.nome());
         bomba.setCombustivel(combustivel);
         Bomba saved = bombaRepo.save(bomba);
-        BombaResponse resp = mapper.map(saved, BombaResponse.class);
-        resp.setCombustivelNome(combustivel.getNome());
-        resp.setPrecoPorLitro(combustivel.getPrecoPorLitro());
-        return resp;
+        return new BombaResponse(
+                saved.getId(),
+                saved.getNome(),
+                combustivel.getId(),
+                combustivel.getNome(),
+                combustivel.getPrecoPorLitro());
     }
 
     /**

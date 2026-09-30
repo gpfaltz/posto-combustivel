@@ -7,7 +7,6 @@ import br.com.gpfaltz.posto_combustivel.exception.ResourceNotFoundException;
 import br.com.gpfaltz.posto_combustivel.repository.BombaRepository;
 import br.com.gpfaltz.posto_combustivel.repository.CombustivelRepository;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +20,6 @@ public class CombustivelService {
     
     private final CombustivelRepository repository;
     private final BombaRepository bombaRepository;
-    private final ModelMapper mapper = new ModelMapper();
 
     public CombustivelService(CombustivelRepository repository, BombaRepository bombaRepository) {
         this.repository = repository;
@@ -35,9 +33,12 @@ public class CombustivelService {
      * @return DTO de resposta com os dados persistidos
      */
     public CombustivelResponse create(CombustivelRequest request) {
-        Combustivel entity = mapper.map(request, Combustivel.class);
+        // Manual mapping from request record to entity
+        Combustivel entity = new Combustivel();
+        entity.setNome(request.nome());
+        entity.setPrecoPorLitro(request.precoPorLitro());
         Combustivel saved = repository.save(entity);
-        return mapper.map(saved, CombustivelResponse.class);
+        return new CombustivelResponse(saved.getId(), saved.getNome(), saved.getPrecoPorLitro());
     }
 
     /**
@@ -47,7 +48,7 @@ public class CombustivelService {
      */
     public List<CombustivelResponse> getAll() {
         return repository.findAll().stream()
-                .map(c -> mapper.map(c, CombustivelResponse.class))
+                .map(c -> new CombustivelResponse(c.getId(), c.getNome(), c.getPrecoPorLitro()))
                 .collect(Collectors.toList());
     }
 
@@ -61,7 +62,7 @@ public class CombustivelService {
     public CombustivelResponse getById(Long id) {
         Combustivel entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Combustível não encontrado"));
-        return mapper.map(entity, CombustivelResponse.class);
+        return new CombustivelResponse(entity.getId(), entity.getNome(), entity.getPrecoPorLitro());
     }
 
     /**
@@ -75,10 +76,10 @@ public class CombustivelService {
     public CombustivelResponse update(Long id, CombustivelRequest request) {
         Combustivel entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Combustível não encontrado"));
-        entity.setNome(request.getNome());
-        entity.setPrecoPorLitro(request.getPrecoPorLitro());
+        entity.setNome(request.nome());
+        entity.setPrecoPorLitro(request.precoPorLitro());
         Combustivel saved = repository.save(entity);
-        return mapper.map(saved, CombustivelResponse.class);
+        return new CombustivelResponse(saved.getId(), saved.getNome(), saved.getPrecoPorLitro());
     }
 
     /**
