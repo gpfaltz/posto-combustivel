@@ -86,17 +86,31 @@ Desenvolver uma aplicação simples em **Java** para cadastro e consulta de abas
 ## 📂 Estrutura do Projeto
 
 ```
-src/main/java/br/com/gpfaltz/posto_combustivel/
-├─ config/          → OpenApiConfig (Swagger)
-├─ controller/      → CombustivelController, BombaController, AbastecimentoController
-├─ dto/
-│   ├─ request/    → CombustivelRequest, BombaRequest, AbastecimentoRequest
-│   └─ response/   → CombustivelResponse, BombaResponse, AbastecimentoResponse
-├─ entity/          → Combustivel, Bomba, Abastecimento (JPA)
-├─ exception/      → GlobalExceptionHandler, ResourceNotFoundException
-├─ repository/     → JPA repositories (CombustivelRepository, BombaRepository, AbastecimentoRepository)
-├─ service/         → Camada de negócio (CombustivelService, BombaService, AbastecimentoService)
-└─ PostoAbastecimentoApplication.java (classe principal)
+src/
+├─ main/
+│   └─ java/br/com/gpfaltz/posto_combustivel/
+│       ├─ config/          → OpenApiConfig (Swagger)
+│       ├─ controller/      → CombustivelController, BombaController, AbastecimentoController
+│       ├─ dto/
+│       │   ├─ request/    → CombustivelRequest, BombaRequest, AbastecimentoRequest
+│       │   └─ response/   → CombustivelResponse, BombaResponse, AbastecimentoResponse
+│       ├─ entity/          → Combustivel, Bomba, Abastecimento (JPA)
+│       ├─ exception/      → GlobalExceptionHandler, ResourceNotFoundException
+│       ├─ repository/     → JPA repositories (CombustivelRepository, BombaRepository, AbastecimentoRepository)
+│       ├─ service/         → Camada de negócio (CombustivelService, BombaService, AbastecimentoService)
+│       └─ PostoAbastecimentoApplication.java (classe principal)
+├─ test/
+│   └─ java/br/com/gpfaltz/posto_combustivel/
+│       ├─ config/          → OpenApiConfigTest
+│       ├─ controller/      → CombustivelControllerTest, BombaControllerTest, AbastecimentoControllerTest
+│       ├─ dto/
+│       │   ├─ request/    → CombustivelRequestTest, BombaRequestTest, AbastecimentoRequestTest
+│       │   └─ response/   → (tests de response, se existentes)
+│       ├─ entity/          → (eventuais testes de entidade)
+│       ├─ exception/      → (testes de exceções)
+│       ├─ repository/     → (testes de repositório, se houver)
+│       └─ service/         → CombustivelServiceTest, BombaServiceTest, AbastecimentoServiceTest
+└─ resources/               → application.properties (configuração H2, etc.)
 ```
 
 ## 📋 Pré‑requisitos
@@ -210,7 +224,17 @@ curl -X DELETE http://localhost:8080/api/abastecimentos/1
 ```
 
 ### Testes automatizados
-Execute os testes unitários (se houver) com:
+O projeto possui **testes unitários** que cobrem praticamente todas as camadas da aplicação:
+
+* **Configuração** – `OpenApiConfigTest` verifica a criação do bean `OpenAPI` e a presença das anotações `@Configuration` e `@Bean`.
+* **Controllers** – Testes de `CombustivelController`, `BombaController` e `AbastecimentoController` utilizam `MockMvc` para validar os endpoints REST (CRUD) e garantem que o serviço subjacente seja chamado corretamente.
+* **DTOs** – Cada classe de request (`CombustivelRequest`, `BombaRequest`, `AbastecimentoRequest`) tem testes de validação Bean Validation (campo obrigatório, valores positivos, etc.).
+* **Serviços** – (se presentes) testes de serviço garantem a lógica de negócio e a interação com os repositórios.
+
+Os testes são escritos com **JUnit 5**, **Mockito** e **Spring MVC Test**, proporcionando alta cobertura de código.
+
+Para executar todos os testes basta rodar:
 ```bash
 mvn test
 ```
+O relatório de cobertura pode ser visualizado em `target/site/jacoco/index.html` após a execução.
