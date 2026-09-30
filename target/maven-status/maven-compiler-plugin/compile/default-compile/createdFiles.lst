@@ -2,6 +2,7 @@ br\com\gpfaltz\posto_combustivel\dto\response\BombaResponse.class
 br\com\gpfaltz\posto_combustivel\entity\Bomba.class
 br\com\gpfaltz\posto_combustivel\dto\request\BombaRequest.class
 br\com\gpfaltz\posto_combustivel\dto\response\AbastecimentoResponse.class
+br\com\gpfaltz\posto_combustivel\PostoCombustivelApplication.class
 br\com\gpfaltz\posto_combustivel\entity\Combustivel$CombustivelBuilder.class
 br\com\gpfaltz\posto_combustivel\dto\request\AbastecimentoRequest.class
 br\com\gpfaltz\posto_combustivel\entity\Abastecimento.class
@@ -22,4 +23,3 @@ br\com\gpfaltz\posto_combustivel\repository\AbastecimentoRepository.class
 br\com\gpfaltz\posto_combustivel\exception\ResourceNotFoundException.class
 br\com\gpfaltz\posto_combustivel\service\BombaService.class
 br\com\gpfaltz\posto_combustivel\service\CombustivelService.class
-br\com\gpfaltz\posto_combustivel\PostoAbastecimentoApplication.class
