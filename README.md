@@ -124,16 +124,28 @@ src/
 O projeto utiliza o **Spring Boot** com configuração padrão. As dependências estão declaradas em `pom.xml`, incluindo:
 - `spring-boot-starter-web`
 - `spring-boot-starter-data-jpa`
-- `h2` (banco em memória)
+- `h2` (banco em arquivo, persistente)
 - `lombok`
 - `modelmapper`
 - `springdoc-openapi-starter-webmvc-ui`
 
-Não há necessidade de arquivos `application.properties` adicionais; o Spring Boot cria o datasource H2 automaticamente. Caso queira acessar o console H2, habilite em `src/main/resources/application.properties`:
-```
+### Configuração do Banco H2 (persistência em disco)
+
+O projeto utiliza o banco **H2** em modo *file*, armazenando os dados no diretório `./data`. Dessa forma, os registros não são perdidos entre reinicializações da aplicação.
+
+O arquivo de configuração `src/main/resources/application.properties` contém as propriedades necessárias:
+```properties
+# URL de conexão ao H2 usando arquivo local em ./data/posto
+spring.datasource.url=jdbc:h2:file:./data/posto;DB_CLOSE_DELAY=-1
+spring.datasource.driverClassName=org.h2.Driver
+# Atualiza o schema automaticamente sem perder dados existentes
+spring.jpa.hibernate.ddl-auto=update
+# Habilita o console web do H2 para inspeção
 spring.h2.console.enabled=true
-spring.datasource.url=jdbc:h2:mem:testdb
+spring.h2.console.path=/h2-console
 ```
+
+> **Observação:** O diretório `./data` será criado automaticamente na primeira execução. Caso deseje limpar o banco, basta remover os arquivos dentro desse diretório.
 
 ## ▶️ Como rodar localmente
 
