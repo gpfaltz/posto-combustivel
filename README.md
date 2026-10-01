@@ -241,7 +241,7 @@ O projeto possui **testes unitários** que cobrem praticamente todas as camadas 
 * **Configuração** – `OpenApiConfigTest` verifica a criação do bean `OpenAPI` e a presença das anotações `@Configuration` e `@Bean`.
 * **Controllers** – Testes de `CombustivelController`, `BombaController` e `AbastecimentoController` utilizam `MockMvc` para validar os endpoints REST (CRUD) e garantem que o serviço subjacente seja chamado corretamente.
 * **DTOs** – Cada classe de request (`CombustivelRequest`, `BombaRequest`, `AbastecimentoRequest`) tem testes de validação Bean Validation (campo obrigatório, valores positivos, etc.).
-* **Serviços** – (se presentes) testes de serviço garantem a lógica de negócio e a interação com os repositórios.
+* **Serviços** – testes de serviço garantem a lógica de negócio e a interação com os repositórios.
 
 Os testes são escritos com **JUnit 5**, **Mockito** e **Spring MVC Test**, proporcionando alta cobertura de código.
 
