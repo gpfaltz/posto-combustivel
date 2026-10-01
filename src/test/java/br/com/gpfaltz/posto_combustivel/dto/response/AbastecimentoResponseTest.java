@@ -6,10 +6,22 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Testes unitários para {@link AbastecimentoResponse}.
+ * Verifica getters, equals/hashCode, toString e serialização JSON.
+ *
+ * <p>Exemplo de execução:</p>
+ * <pre>
+ * mvn test -Dtest=AbastecimentoResponseTest
+ * </pre>
+ */
 class AbastecimentoResponseTest {
     // Register JavaTimeModule to handle LocalDate serialization
     private final ObjectMapper mapper = new ObjectMapper().registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
 
+    /**
+     * Verifica que os getters retornam os valores fornecidos.
+     */
     @Test
     void gettersReturnProvidedValues() {
         LocalDate date = LocalDate.of(2023, 5, 10);
@@ -25,6 +37,9 @@ class AbastecimentoResponseTest {
         assertEquals(new BigDecimal("42.00"), resp.valorTotal());
     }
 
+    /**
+     * Verifica equals e hashCode.
+     */
     @Test
     void equalsAndHashCodeWork() {
         AbastecimentoResponse a1 = new AbastecimentoResponse(1L, 2L, "Bomba", LocalDate.now(),
@@ -38,6 +53,9 @@ class AbastecimentoResponseTest {
         assertNotEquals(a1, a3);
     }
 
+    /**
+     * Verifica que o toString contém todos os campos.
+     */
     @Test
     void toStringContainsAllFields() {
         AbastecimentoResponse resp = new AbastecimentoResponse(1L, 2L, "Bomba", LocalDate.of(2023,1,1),
@@ -52,6 +70,9 @@ class AbastecimentoResponseTest {
         assertTrue(s.contains("50"));
     }
 
+    /**
+     * Verifica a serialização/deserialização JSON.
+     */
     @Test
     void jsonSerializationRoundTrip() throws Exception {
         AbastecimentoResponse original = new AbastecimentoResponse(1L, 2L, "Bomba", LocalDate.of(2023,5,10),
@@ -61,6 +82,9 @@ class AbastecimentoResponseTest {
         assertEquals(original, deserialized);
     }
 
+    /**
+     * Verifica o comportamento com valores nulos.
+     */
     @Test
     void handlesNullValues() {
         AbastecimentoResponse resp = new AbastecimentoResponse(null, null, null, null, null, null, null);

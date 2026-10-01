@@ -5,9 +5,21 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Testes unitários para {@link BombaResponse}.
+ * Verifica getters, equals/hashCode, toString e serialização JSON.
+ *
+ * <p>Exemplo de execução:</p>
+ * <pre>
+ * mvn test -Dtest=BombaResponseTest
+ * </pre>
+ */
 class BombaResponseTest {
     private final ObjectMapper mapper = new ObjectMapper();
 
+    /**
+     * Verifica que os getters retornam os valores corretos.
+     */
     @Test
     void gettersReturnProvidedValues() {
         BombaResponse resp = new BombaResponse(1L, "Bomba A", 2L, "Gasolina", new BigDecimal("4.20"));
@@ -18,6 +30,9 @@ class BombaResponseTest {
         assertEquals(new BigDecimal("4.20"), resp.precoPorLitro());
     }
 
+    /**
+     * Verifica equals e hashCode.
+     */
     @Test
     void equalsAndHashCodeWork() {
         BombaResponse b1 = new BombaResponse(1L, "Bomba", 2L, "Diesel", BigDecimal.ONE);
@@ -28,6 +43,9 @@ class BombaResponseTest {
         assertNotEquals(b1, b3);
     }
 
+    /**
+     * Verifica que o toString contém todos os campos.
+     */
     @Test
     void toStringContainsAllFields() {
         BombaResponse resp = new BombaResponse(1L, "Bomba", 2L, "Etanol", new BigDecimal("5.55"));
@@ -39,6 +57,9 @@ class BombaResponseTest {
         assertTrue(s.contains("5.55"));
     }
 
+    /**
+     * Verifica a serialização/deserialização JSON.
+     */
     @Test
     void jsonSerializationRoundTrip() throws Exception {
         BombaResponse original = new BombaResponse(1L, "Bomba", 2L, "Gasolina", new BigDecimal("4.20"));
@@ -47,6 +68,9 @@ class BombaResponseTest {
         assertEquals(original, deserialized);
     }
 
+    /**
+     * Verifica o comportamento com valores nulos.
+     */
     @Test
     void handlesNullValues() {
         BombaResponse resp = new BombaResponse(null, null, null, null, null);

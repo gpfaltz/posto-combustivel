@@ -23,6 +23,15 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+/**
+ * Testes unitários para {@link AbastecimentoService}.
+ * Verifica criação, atualização, busca, listagem e exclusão de abastecimentos.
+ *
+ * <p>Exemplo de execução:</p>
+ * <pre>
+ * mvn test -Dtest=AbastecimentoServiceTest
+ * </pre>
+ */
 class AbastecimentoServiceTest {
 
     @Mock
@@ -52,6 +61,9 @@ class AbastecimentoServiceTest {
                 .build();
     }
 
+    /**
+     * Verifica que a criação calcula o total corretamente e retorna a resposta.
+     */
     @Test
     void create_ShouldCalculateTotalAndReturnResponse() {
         AbastecimentoRequest request = new AbastecimentoRequest(1L, LocalDate.now(), new BigDecimal("10"));
@@ -70,6 +82,9 @@ class AbastecimentoServiceTest {
         assertEquals(new BigDecimal("35.00"), response.valorTotal());
     }
 
+    /**
+     * Verifica que a criação lança exceção quando a bomba não existe.
+     */
     @Test
     void create_WhenBombaNotFound_ShouldThrowException() {
         AbastecimentoRequest request = new AbastecimentoRequest(99L, LocalDate.now(), new BigDecimal("5"));
@@ -77,6 +92,9 @@ class AbastecimentoServiceTest {
         assertThrows(ResourceNotFoundException.class, () -> service.create(request));
     }
 
+    /**
+     * Verifica que a listagem retorna respostas mapeadas.
+     */
     @Test
     void getAll_ShouldReturnMappedResponses() {
         Abastecimento abastecimento = Abastecimento.builder()
@@ -94,6 +112,9 @@ class AbastecimentoServiceTest {
         assertEquals(bomba.getId(), resp.bombaId());
     }
 
+    /**
+     * Verifica que a busca por ID retorna a resposta quando encontrada.
+     */
     @Test
     void getById_WhenExists_ShouldReturnResponse() {
         Abastecimento abastecimento = Abastecimento.builder()
@@ -108,12 +129,18 @@ class AbastecimentoServiceTest {
         assertEquals(2L, resp.id());
     }
 
+    /**
+     * Verifica que a exclusão lança exceção quando o registro não existe.
+     */
     @Test
     void delete_WhenNotExists_ShouldThrowException() {
         when(abastecimentoRepo.existsById(5L)).thenReturn(false);
         assertThrows(ResourceNotFoundException.class, () -> service.delete(5L));
     }
 
+    /**
+     * Verifica que a atualização recalcula o total e retorna a resposta.
+     */
     @Test
     void update_ShouldRecalculateTotalAndReturnResponse() {
         // Prepare existing abastecimento
@@ -154,12 +181,18 @@ class AbastecimentoServiceTest {
         assertEquals(new BigDecimal("12.60"), resp.valorTotal());
     }
 
+    /**
+     * Verifica que a busca por ID lança exceção quando não encontrada.
+     */
     @Test
     void getById_WhenNotFound_ShouldThrowException() {
         when(abastecimentoRepo.findById(99L)).thenReturn(Optional.empty());
         assertThrows(ResourceNotFoundException.class, () -> service.getById(99L));
     }
 
+    /**
+     * Verifica que a exclusão funciona quando o registro existe.
+     */
     @Test
     void delete_WhenExists_ShouldDeleteSuccessfully() {
         when(abastecimentoRepo.existsById(1L)).thenReturn(true);
@@ -168,6 +201,9 @@ class AbastecimentoServiceTest {
         verify(abastecimentoRepo, times(1)).deleteById(1L);
     }
 
+    /**
+     * Verifica que a atualização lança exceção quando o abastecimento não existe.
+     */
     @Test
     void update_WhenAbastecimentoNotFound_ShouldThrowException() {
         // Mock repository to return empty for the abastecimento
@@ -176,6 +212,9 @@ class AbastecimentoServiceTest {
         assertThrows(ResourceNotFoundException.class, () -> service.update(99L, request));
     }
 
+    /**
+     * Verifica que a atualização lança exceção quando a bomba não existe.
+     */
     @Test
     void update_WhenBombaNotFound_ShouldThrowException() {
         // Existing abastecimento

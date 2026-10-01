@@ -14,6 +14,15 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import br.com.gpfaltz.posto_combustivel.entity.Bomba;
 import br.com.gpfaltz.posto_combustivel.entity.Combustivel;
 
+/**
+ * Testes de integração para {@link BombaRepository}.
+ * Verifica persistência e busca de bombas associadas a um combustível.
+ *
+ * <p>Exemplo de execução:</p>
+ * <pre>
+ * mvn test -Dtest=BombaRepositoryTest
+ * </pre>
+ */
 @DataJpaTest
 class BombaRepositoryTest {
 
@@ -23,6 +32,9 @@ class BombaRepositoryTest {
 	@Autowired
 	private CombustivelRepository combustivelRepository;
 
+	/**
+	 * Verifica que a bomba é persistida e pode ser recuperada com o combustível associado.
+	 */
 	@Test
 	void saveAndFind_ShouldPersistWithCombustivel() {
 		Combustivel combustivel = Combustivel.builder().nome("Álcool").precoPorLitro(new BigDecimal("3.50")).build();

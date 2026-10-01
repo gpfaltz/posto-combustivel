@@ -13,12 +13,24 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import br.com.gpfaltz.posto_combustivel.entity.Combustivel;
 
+/**
+ * Testes de integração para {@link CombustivelRepository}.
+ * Verifica persistência e busca por ID de combustível.
+ *
+ * <p>Exemplo de execução:</p>
+ * <pre>
+ * mvn test -Dtest=CombustivelRepositoryTest
+ * </pre>
+ */
 @DataJpaTest
 class CombustivelRepositoryTest {
 
 	@Autowired
 	private CombustivelRepository repository;
 
+	/**
+	 * Verifica que o combustível é persistido e pode ser recuperado por ID.
+	 */
 	@Test
 	void saveAndFindById_ShouldPersistEntity() {
 		Combustivel combustivel = Combustivel.builder().nome("Álcool").precoPorLitro(new BigDecimal("3.50")).build();

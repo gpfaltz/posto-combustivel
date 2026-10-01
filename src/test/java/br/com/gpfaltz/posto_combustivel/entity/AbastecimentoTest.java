@@ -7,8 +7,20 @@ import java.time.LocalDate;
 import java.lang.reflect.Field;
 import jakarta.persistence.*;
 
+/**
+ * Testes unitários para a entidade {@link Abastecimento}.
+ * Verifica builder, getters/setters, equals/hashCode e anotações JPA.
+ *
+ * <p>Exemplo de execução:</p>
+ * <pre>
+ * mvn test -Dtest=AbastecimentoTest
+ * </pre>
+ */
 class AbastecimentoTest {
 
+    /**
+     * Verifica o padrão builder e os getters/setters.
+     */
     @Test
     void builderAndGettersSetters() {
         Combustivel combustivel = Combustivel.builder()
@@ -35,6 +47,9 @@ class AbastecimentoTest {
         assertThat(a.getValorTotal()).isEqualByComparingTo("207.96");
     }
 
+    /**
+     * Verifica equals e hashCode.
+     */
     @Test
     void equalsAndHashCode() {
         Combustivel c = Combustivel.builder().id(1L).nome("X").precoPorLitro(BigDecimal.ONE).build();
@@ -47,6 +62,9 @@ class AbastecimentoTest {
         assertThat(a1).isNotEqualTo(a3);
     }
 
+    /**
+     * Verifica a presença das anotações JPA.
+     */
     @Test
     void jpaAnnotationsPresent() throws Exception {
         assertThat(Abastecimento.class.isAnnotationPresent(Entity.class)).isTrue();

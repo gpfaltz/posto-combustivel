@@ -19,6 +19,15 @@ import java.util.Collections;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+/**
+ * Testes de integração do {@link AbastecimentoController}.
+ * Verifica os endpoints de criação, listagem, busca por ID, atualização e remoção.
+ *
+ * <p>Exemplo de execução:</p>
+ * <pre>
+ * mvn test -Dtest=AbastecimentoControllerTest
+ * </pre>
+ */
 @WebMvcTest(AbastecimentoController.class)
 class AbastecimentoControllerTest {
 
@@ -31,6 +40,10 @@ class AbastecimentoControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    /**
+     * Testa o endpoint POST /api/abastecimentos.
+     * Espera resposta 200 OK e campo {@code id} presente.
+     */
     @Test
     void create_ShouldReturnResponse() throws Exception {
         AbastecimentoRequest request = new AbastecimentoRequest(1L, LocalDate.now(), new BigDecimal("10"));
@@ -43,6 +56,9 @@ class AbastecimentoControllerTest {
                 .andExpect(jsonPath("$.id").value(1));
     }
 
+    /**
+     * Testa o endpoint GET /api/abastecimentos retornando lista não vazia.
+     */
     @Test
     void getAll_ShouldReturnList() throws Exception {
         AbastecimentoResponse mockResponse = new AbastecimentoResponse(1L, 1L, "Bomba 1", LocalDate.now(), new BigDecimal("3.50"), new BigDecimal("10"), new BigDecimal("35.00"));
@@ -52,6 +68,9 @@ class AbastecimentoControllerTest {
                 .andExpect(jsonPath("$[0].id").value(1));
     }
 
+    /**
+     * Testa o endpoint GET /api/abastecimentos/{id} retornando o recurso solicitado.
+     */
     @Test
     void getById_ShouldReturnResponse() throws Exception {
         Long id = 1L;
@@ -63,6 +82,9 @@ class AbastecimentoControllerTest {
         Mockito.verify(service).getById(id);
     }
 
+    /**
+     * Testa o endpoint PUT /api/abastecimentos/{id} atualizando o volume.
+     */
     @Test
     void update_ShouldReturnResponse() throws Exception {
         Long id = 1L;
@@ -77,6 +99,9 @@ class AbastecimentoControllerTest {
         Mockito.verify(service).update(Mockito.eq(id), Mockito.any());
     }
 
+    /**
+     * Testa o endpoint DELETE /api/abastecimentos/{id} retornando 204 No Content.
+     */
     @Test
     void delete_ShouldReturnNoContent() throws Exception {
         Long id = 1L;
@@ -85,6 +110,9 @@ class AbastecimentoControllerTest {
         Mockito.verify(service).delete(id);
     }
 
+    /**
+     * Testa o endpoint GET quando não há registros, retornando array vazio.
+     */
     @Test
     void getAll_EmptyList_ShouldReturnEmptyArray() throws Exception {
         Mockito.when(service.getAll()).thenReturn(Collections.emptyList());

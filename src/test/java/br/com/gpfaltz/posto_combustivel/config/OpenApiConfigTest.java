@@ -14,11 +14,21 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 
 /**
- * Unit tests for {@link OpenApiConfig}.
- * These tests verify the bean creation and the presence of required Spring annotations.
+ * Testes unitários para a classe de configuração OpenAPI.
+ * Verifica a criação do bean {@link OpenApiConfig#customOpenAPI()} e a presença das
+ * anotações Spring necessárias.
+ *
+ * <p>Exemplo de execução:</p>
+ * <pre>
+ * mvn test -Dtest=OpenApiConfigTest
+ * </pre>
  */
 public class OpenApiConfigTest {
 
+    /**
+     * Garante que o bean {@code OpenAPI} contém as informações corretas de título,
+     * descrição e versão.
+     */
     @Test
     @DisplayName("customOpenAPI should return OpenAPI with correct Info configuration")
     void testCustomOpenAPI_ReturnsConfiguredInfo() {
@@ -32,6 +42,9 @@ public class OpenApiConfigTest {
         assertEquals("1.0.0", info.getVersion(), "Version should match configuration");
     }
 
+    /**
+     * Verifica se a classe {@code OpenApiConfig} está anotada com {@link Configuration}.
+     */
     @Test
     @DisplayName("OpenApiConfig class should be annotated with @Configuration")
     void testClassHasConfigurationAnnotation() {
@@ -39,6 +52,9 @@ public class OpenApiConfigTest {
         assertNotNull(configuration, "OpenApiConfig must be annotated with @Configuration");
     }
 
+    /**
+     * Verifica se o método {@code customOpenAPI} está anotado com {@link Bean}.
+     */
     @Test
     @DisplayName("customOpenAPI method should be annotated with @Bean")
     void testMethodHasBeanAnnotation() throws NoSuchMethodException {

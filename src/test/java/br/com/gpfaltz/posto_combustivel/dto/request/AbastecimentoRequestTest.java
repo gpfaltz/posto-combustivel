@@ -15,7 +15,14 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Testes unitários para {@link AbastecimentoRequest} garantindo 100% de cobertura.
+ * Testes unitários para {@link AbastecimentoRequest}.
+ * Verifica as restrições de Bean Validation, bem como os métodos {@code equals},
+ * {@code hashCode} e {@code toString}.
+ *
+ * <p>Exemplo de execução:</p>
+ * <pre>
+ * mvn test -Dtest=AbastecimentoRequestTest
+ * </pre>
  */
 class AbastecimentoRequestTest {
 
@@ -30,6 +37,9 @@ class AbastecimentoRequestTest {
         return validator.validate(obj);
     }
 
+    /**
+     * Garante que uma instância válida não gera violações de validação.
+     */
     @Test
     @DisplayName("Instancia válida não gera violações")
     void validInstance() {
@@ -38,9 +48,15 @@ class AbastecimentoRequestTest {
         assertTrue(violations.isEmpty(), "Não deve haver violações para instância válida");
     }
 
+    /**
+     * Testes de restrições {@code @NotNull} nos campos obrigatórios.
+     */
     @Nested
     @DisplayName("Validações de campos obrigatórios")
     class NotNullConstraints {
+        /**
+         * Campo {@code bombaId} não pode ser {@code null}.
+         */
         @Test
         void bombaIdNull() {
             var request = new AbastecimentoRequest(null, LocalDate.now(), new BigDecimal("5"));
@@ -50,6 +66,9 @@ class AbastecimentoRequestTest {
             assertEquals("ID da bomba é obrigatório", v.getMessage());
         }
 
+        /**
+         * Campo {@code data} não pode ser {@code null}.
+         */
         @Test
         void dataNull() {
             var request = new AbastecimentoRequest(1L, null, new BigDecimal("5"));
@@ -59,6 +78,9 @@ class AbastecimentoRequestTest {
             assertEquals("Data é obrigatória", v.getMessage());
         }
 
+        /**
+         * Campo {@code volume} não pode ser {@code null}.
+         */
         @Test
         void volumeNull() {
             var request = new AbastecimentoRequest(1L, LocalDate.now(), null);
@@ -69,6 +91,9 @@ class AbastecimentoRequestTest {
         }
     }
 
+    /**
+     * Verifica o correto funcionamento de {@code equals}, {@code hashCode} e {@code toString}.
+     */
     @Test
     @DisplayName("equals, hashCode e toString funcionam corretamente")
     void equalsHashCodeToString() {

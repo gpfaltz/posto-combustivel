@@ -21,6 +21,15 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * Testes unitários para {@link BombaService}.
+ * Verifica criação, atualização, busca, listagem e exclusão de bombas.
+ *
+ * <p>Exemplo de execução:</p>
+ * <pre>
+ * mvn test -Dtest=BombaServiceTest
+ * </pre>
+ */
 class BombaServiceTest {
 
     @Mock
@@ -53,6 +62,9 @@ class BombaServiceTest {
                 .build();
     }
 
+    /**
+     * Verifica que a criação retorna a resposta correta.
+     */
     @Test
     void create_ShouldReturnResponse() {
         BombaRequest request = new BombaRequest("Bomba X", 1L);
@@ -68,6 +80,9 @@ class BombaServiceTest {
         assertEquals(combustivel.getId(), resp.combustivelId());
     }
 
+    /**
+     * Verifica que a criação lança exceção quando o combustível não existe.
+     */
     @Test
     void create_WhenCombustivelNotFound_ShouldThrow() {
         BombaRequest request = new BombaRequest("Bomba Y", 99L);
@@ -75,6 +90,9 @@ class BombaServiceTest {
         assertThrows(ResourceNotFoundException.class, () -> service.create(request));
     }
 
+    /**
+     * Verifica que a listagem mapeia as respostas.
+     */
     @Test
     void getAll_ShouldMapResponses() {
         when(bombaRepo.findAll()).thenReturn(Collections.singletonList(bomba));
@@ -85,6 +103,9 @@ class BombaServiceTest {
         assertEquals(bomba.getNome(), resp.nome());
     }
 
+    /**
+     * Verifica que a exclusão lança exceção quando há abastecimentos associados.
+     */
     @Test
     void delete_WhenHasAbastecimento_ShouldThrowIllegalState() {
         when(bombaRepo.existsById(1L)).thenReturn(true);
@@ -92,6 +113,9 @@ class BombaServiceTest {
         assertThrows(IllegalStateException.class, () -> service.delete(1L));
     }
 
+    /**
+     * Verifica que a busca por ID retorna a resposta quando encontrada.
+     */
     @Test
     void getById_WhenExists_ShouldReturnResponse() {
         when(bombaRepo.findById(1L)).thenReturn(Optional.of(bomba));
@@ -103,12 +127,18 @@ class BombaServiceTest {
         assertEquals(combustivel.getPrecoPorLitro(), resp.precoPorLitro());
     }
 
+    /**
+     * Verifica que a busca por ID lança exceção quando não encontrada.
+     */
     @Test
     void getById_WhenNotFound_ShouldThrowException() {
         when(bombaRepo.findById(99L)).thenReturn(Optional.empty());
         assertThrows(ResourceNotFoundException.class, () -> service.getById(99L));
     }
 
+    /**
+     * Verifica que a atualização retorna a resposta atualizada.
+     */
     @Test
     void update_ShouldReturnUpdatedResponse() {
         // Existing bomba
@@ -139,6 +169,9 @@ class BombaServiceTest {
         assertEquals(newComb.getPrecoPorLitro(), resp.precoPorLitro());
     }
 
+    /**
+     * Verifica que a atualização lança exceção quando a bomba não existe.
+     */
     @Test
     void update_WhenBombaNotFound_ShouldThrow() {
         BombaRequest request = new BombaRequest("Bomba X", 1L);
@@ -146,6 +179,9 @@ class BombaServiceTest {
         assertThrows(ResourceNotFoundException.class, () -> service.update(1L, request));
     }
 
+    /**
+     * Verifica que a atualização lança exceção quando o combustível não existe.
+     */
     @Test
     void update_WhenCombustivelNotFound_ShouldThrow() {
         BombaRequest request = new BombaRequest("Bomba X", 99L);
@@ -154,6 +190,9 @@ class BombaServiceTest {
         assertThrows(ResourceNotFoundException.class, () -> service.update(1L, request));
     }
 
+    /**
+     * Verifica que a exclusão funciona quando não há abastecimentos.
+     */
     @Test
     void delete_WhenExistsAndNoAbastecimento_ShouldDelete() {
         when(bombaRepo.existsById(1L)).thenReturn(true);
@@ -162,6 +201,9 @@ class BombaServiceTest {
         verify(bombaRepo, times(1)).deleteById(1L);
     }
 
+    /**
+     * Verifica que a exclusão lança exceção quando a bomba não existe.
+     */
     @Test
     void delete_WhenBombaNotFound_ShouldThrow() {
         when(bombaRepo.existsById(99L)).thenReturn(false);

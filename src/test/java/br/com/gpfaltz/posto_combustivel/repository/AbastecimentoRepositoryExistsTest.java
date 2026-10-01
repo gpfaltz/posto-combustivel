@@ -14,6 +14,16 @@ import br.com.gpfaltz.posto_combustivel.entity.Abastecimento;
 import br.com.gpfaltz.posto_combustivel.entity.Bomba;
 import br.com.gpfaltz.posto_combustivel.entity.Combustivel;
 
+/**
+ * Testes de integração para {@link AbastecimentoRepository}.
+ * Verifica o método {@code existsByBombaId} que indica se há abastecimentos
+ * associados a uma bomba específica.
+ *
+ * <p>Exemplo de execução:</p>
+ * <pre>
+ * mvn test -Dtest=AbastecimentoRepositoryExistsTest
+ * </pre>
+ */
 @DataJpaTest
 class AbastecimentoRepositoryExistsTest {
 
@@ -26,6 +36,10 @@ class AbastecimentoRepositoryExistsTest {
     @Autowired
     private CombustivelRepository combustivelRepository;
 
+    /**
+     * Verifica que {@code existsByBombaId} retorna <code>true</code> quando há
+     * ao menos um registro de {@link Abastecimento} associado à bomba informada.
+     */
     @Test
     void existsByBombaId_ShouldReturnTrueWhenAbastecimentoExists() {
         // arrange: create and persist related entities
@@ -49,10 +63,13 @@ class AbastecimentoRepositoryExistsTest {
                 .build();
         abastecimentoRepository.save(abastecimento);
 
-        // act & assert
         assertTrue(abastecimentoRepository.existsByBombaId(savedBomba.getId()));
     }
 
+    /**
+     * Verifica que {@code existsByBombaId} retorna <code>false</code> quando não
+     * existe nenhum abastecimento para a bomba informada.
+     */
     @Test
     void existsByBombaId_ShouldReturnFalseWhenNoAbastecimento() {
         // use a random non‑existent bomba id (e.g., 9999L)

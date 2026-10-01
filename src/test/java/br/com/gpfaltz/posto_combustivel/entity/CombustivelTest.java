@@ -6,8 +6,20 @@ import java.math.BigDecimal;
 import java.lang.reflect.Field;
 import jakarta.persistence.*;
 
+/**
+ * Testes unitários para a entidade {@link Combustivel}.
+ * Verifica o padrão builder, getters/setters, equals/hashCode e anotações JPA.
+ *
+ * <p>Exemplo de execução:</p>
+ * <pre>
+ * mvn test -Dtest=CombustivelTest
+ * </pre>
+ */
 class CombustivelTest {
 
+    /**
+     * Verifica o padrão builder e os getters/setters.
+     */
     @Test
     void builderAndGettersSetters() {
         Combustivel c = Combustivel.builder()
@@ -20,6 +32,9 @@ class CombustivelTest {
         assertThat(c.getPrecoPorLitro()).isEqualByComparingTo("4.599");
     }
 
+    /**
+     * Verifica equals e hashCode.
+     */
     @Test
     void equalsAndHashCode() {
         Combustivel c1 = Combustivel.builder()
@@ -42,6 +57,9 @@ class CombustivelTest {
         assertThat(c1).isNotEqualTo(c3);
     }
 
+    /**
+     * Verifica a presença das anotações JPA.
+     */
     @Test
     void jpaAnnotationsPresent() throws Exception {
         // Class level

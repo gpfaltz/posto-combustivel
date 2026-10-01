@@ -5,9 +5,21 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Testes unitários para {@link CombustivelResponse}.
+ * Verifica getters, equals/hashCode, toString e serialização JSON.
+ *
+ * <p>Exemplo de execução:</p>
+ * <pre>
+ * mvn test -Dtest=CombustivelResponseTest
+ * </pre>
+ */
 class CombustivelResponseTest {
     private final ObjectMapper mapper = new ObjectMapper();
 
+    /**
+     * Verifica que os getters retornam os valores fornecidos.
+     */
     @Test
     void gettersReturnProvidedValues() {
         CombustivelResponse resp = new CombustivelResponse(1L, "Gasolina", new BigDecimal("4.20"));
@@ -16,6 +28,9 @@ class CombustivelResponseTest {
         assertEquals(new BigDecimal("4.20"), resp.precoPorLitro());
     }
 
+    /**
+     * Verifica equals e hashCode.
+     */
     @Test
     void equalsAndHashCodeWork() {
         CombustivelResponse c1 = new CombustivelResponse(1L, "Diesel", BigDecimal.ONE);
@@ -26,6 +41,9 @@ class CombustivelResponseTest {
         assertNotEquals(c1, c3);
     }
 
+    /**
+     * Verifica que o toString contém todos os campos.
+     */
     @Test
     void toStringContainsAllFields() {
         CombustivelResponse resp = new CombustivelResponse(1L, "Etanol", new BigDecimal("5.55"));
@@ -35,6 +53,9 @@ class CombustivelResponseTest {
         assertTrue(s.contains("5.55"));
     }
 
+    /**
+     * Verifica a serialização/deserialização JSON.
+     */
     @Test
     void jsonSerializationRoundTrip() throws Exception {
         CombustivelResponse original = new CombustivelResponse(1L, "Gasolina", new BigDecimal("4.20"));
@@ -43,6 +64,9 @@ class CombustivelResponseTest {
         assertEquals(original, deserialized);
     }
 
+    /**
+     * Verifica o comportamento com valores nulos.
+     */
     @Test
     void handlesNullValues() {
         CombustivelResponse resp = new CombustivelResponse(null, null, null);

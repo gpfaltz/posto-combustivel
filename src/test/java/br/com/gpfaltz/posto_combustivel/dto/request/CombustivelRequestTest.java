@@ -14,7 +14,14 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Testes unitários para {@link CombustivelRequest} garantindo 100% de cobertura.
+ * Testes unitários para {@link CombustivelRequest}.
+ * Verifica as restrições de Bean Validation e o comportamento dos métodos
+ * {@code equals}, {@code hashCode} e {@code toString}.
+ *
+ * <p>Exemplo de execução:</p>
+ * <pre>
+ * mvn test -Dtest=CombustivelRequestTest
+ * </pre>
  */
 class CombustivelRequestTest {
 
@@ -29,6 +36,9 @@ class CombustivelRequestTest {
         return validator.validate(obj);
     }
 
+    /**
+     * Garante que uma instância válida não gera violações.
+     */
     @Test
     @DisplayName("Instancia válida não gera violações")
     void validInstance() {
@@ -37,9 +47,15 @@ class CombustivelRequestTest {
         assertTrue(violations.isEmpty(), "Nenhuma violação esperada para instância válida");
     }
 
+    /**
+     * Testes de restrições {@code @NotBlank} e {@code @NotNull} nos campos.
+     */
     @Nested
     @DisplayName("Validações de campos obrigatórios")
     class FieldConstraints {
+        /**
+         * Campo {@code nome} não pode ser vazio.
+         */
         @Test
         void nomeBlank() {
             var request = new CombustivelRequest("   ", new BigDecimal("5"));
@@ -49,6 +65,9 @@ class CombustivelRequestTest {
             assertEquals("Nome é obrigatório", v.getMessage());
         }
 
+        /**
+         * Campo {@code nome} não pode ser {@code null}.
+         */
         @Test
         void nomeNull() {
             var request = new CombustivelRequest(null, new BigDecimal("5"));
@@ -58,6 +77,9 @@ class CombustivelRequestTest {
             assertEquals("Nome é obrigatório", v.getMessage());
         }
 
+        /**
+         * Campo {@code preco} não pode ser {@code null}.
+         */
         @Test
         void precoNull() {
             var request = new CombustivelRequest("Diesel", null);
@@ -67,6 +89,9 @@ class CombustivelRequestTest {
             assertEquals("Preço por litro é obrigatório", v.getMessage());
         }
 
+        /**
+         * Campo {@code preco} deve ser positivo (valor zero).
+         */
         @Test
         void precoZero() {
             var request = new CombustivelRequest("Etanol", BigDecimal.ZERO);
@@ -76,6 +101,9 @@ class CombustivelRequestTest {
             assertEquals("Preço deve ser positivo", v.getMessage());
         }
 
+        /**
+         * Campo {@code preco} deve ser positivo (valor negativo).
+         */
         @Test
         void precoNegativo() {
             var request = new CombustivelRequest("Etanol", new BigDecimal("-1"));
@@ -86,6 +114,9 @@ class CombustivelRequestTest {
         }
     }
 
+    /**
+     * Verifica o correto funcionamento de {@code equals}, {@code hashCode} e {@code toString}.
+     */
     @Test
     @DisplayName("equals, hashCode e toString")
     void equalsHashCodeToString() {

@@ -15,6 +15,15 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
+/**
+ * Testes unitários para {@link GlobalExceptionHandler}.
+ * Verifica o tratamento de exceções customizadas e de validação de parâmetros.
+ *
+ * <p>Exemplo de execução:</p>
+ * <pre>
+ * mvn test -Dtest=GlobalExceptionHandlerTest
+ * </pre>
+ */
 class GlobalExceptionHandlerTest {
 
 	private GlobalExceptionHandler handler;
@@ -24,6 +33,9 @@ class GlobalExceptionHandlerTest {
 		handler = new GlobalExceptionHandler();
 	}
 
+	/**
+	 * Verifica o tratamento da exceção {@link ResourceNotFoundException}.
+	 */
 	@Test
 	void testHandleResourceNotFound() {
 		String msg = "Item not found";
@@ -33,6 +45,9 @@ class GlobalExceptionHandlerTest {
 		assertEquals(msg, response.getBody());
 	}
 
+	/**
+	 * Verifica o tratamento da exceção {@link IllegalStateException}.
+	 */
 	@Test
 	void testHandleIllegalState() {
 		String msg = "Conflict state";
@@ -42,6 +57,9 @@ class GlobalExceptionHandlerTest {
 		assertEquals(msg, response.getBody());
 	}
 
+	/**
+	 * Verifica o tratamento das exceções de validação de argumentos.
+	 */
 	@Test
 	void testHandleValidationExceptions() {
 		// Mock MethodArgumentNotValidException and its BindingResult

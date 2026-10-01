@@ -13,7 +13,13 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Testes unitários para {@link BombaRequest} garantindo 100% de cobertura.
+ * Testes unitários para {@link BombaRequest}.
+ * Verifica validações de Bean Validation e comportamento de equals/hashCode.
+ *
+ * <p>Exemplo de execução:</p>
+ * <pre>
+ * mvn test -Dtest=BombaRequestTest
+ * </pre>
  */
 class BombaRequestTest {
 
@@ -28,6 +34,9 @@ class BombaRequestTest {
         return validator.validate(obj);
     }
 
+    /**
+     * Garante que uma instância válida não gera violações.
+     */
     @Test
     @DisplayName("Instancia válida não gera violações")
     void validInstance() {
@@ -36,9 +45,15 @@ class BombaRequestTest {
         assertTrue(violations.isEmpty(), "Nenhuma violação esperada para instância válida");
     }
 
+    /**
+     * Testes de restrições {@code @NotBlank} e {@code @NotNull}.
+     */
     @Nested
     @DisplayName("Validações de campos obrigatórios")
     class NotBlankAndNotNull {
+        /**
+         * Campo {@code nome} não pode ser vazio.
+         */
         @Test
         void nomeBlank() {
             var request = new BombaRequest("   ", 5L);
@@ -48,6 +63,9 @@ class BombaRequestTest {
             assertEquals("Nome da bomba é obrigatório", v.getMessage());
         }
 
+        /**
+         * Campo {@code nome} não pode ser {@code null}.
+         */
         @Test
         void nomeNull() {
             var request = new BombaRequest(null, 5L);
@@ -57,6 +75,9 @@ class BombaRequestTest {
             assertEquals("Nome da bomba é obrigatório", v.getMessage());
         }
 
+        /**
+         * Campo {@code combustivelId} não pode ser {@code null}.
+         */
         @Test
         void combustivelIdNull() {
             var request = new BombaRequest("Bomba 1", null);
@@ -67,6 +88,9 @@ class BombaRequestTest {
         }
     }
 
+    /**
+     * Verifica equals, hashCode e toString.
+     */
     @Test
     @DisplayName("equals, hashCode e toString")
     void equalsHashCodeToString() {

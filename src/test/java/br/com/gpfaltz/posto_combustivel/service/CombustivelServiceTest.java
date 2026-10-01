@@ -24,6 +24,15 @@ import br.com.gpfaltz.posto_combustivel.exception.ResourceNotFoundException;
 import br.com.gpfaltz.posto_combustivel.repository.BombaRepository;
 import br.com.gpfaltz.posto_combustivel.repository.CombustivelRepository;
 
+/**
+ * Testes unitários para {@link CombustivelService}.
+ * Verifica criação, atualização, busca, listagem e exclusão de combustíveis.
+ *
+ * <p>Exemplo de execução:</p>
+ * <pre>
+ * mvn test -Dtest=CombustivelServiceTest
+ * </pre>
+ */
 class CombustivelServiceTest {
 
 	@Mock
@@ -43,6 +52,9 @@ class CombustivelServiceTest {
 		combustivel = Combustivel.builder().id(1L).nome("Álcool").precoPorLitro(new BigDecimal("3.50")).build();
 	}
 
+	/**
+	 * Verifica que a criação persiste e retorna a resposta.
+	 */
 	@Test
 	void create_ShouldPersistAndReturnResponse() {
 		CombustivelRequest request = new CombustivelRequest("Gasolina", new BigDecimal("4.20"));
@@ -57,6 +69,9 @@ class CombustivelServiceTest {
 		assertEquals(new BigDecimal("4.20"), resp.precoPorLitro());
 	}
 
+	/**
+	 * Verifica que a listagem mapeia as respostas.
+	 */
 	@Test
 	void getAll_ShouldMapResponses() {
 		when(repository.findAll()).thenReturn(Collections.singletonList(combustivel));
@@ -67,6 +82,9 @@ class CombustivelServiceTest {
 		assertEquals(combustivel.getNome(), resp.nome());
 	}
 
+	/**
+	 * Verifica que a exclusão lança exceção quando há bombas associadas.
+	 */
 	@Test
 	void delete_WhenHasBomba_ShouldThrowIllegalState() {
 		when(repository.existsById(1L)).thenReturn(true);
@@ -74,12 +92,18 @@ class CombustivelServiceTest {
 		assertThrows(IllegalStateException.class, () -> service.delete(1L));
 	}
 
+	/**
+	 * Verifica que a exclusão lança exceção quando o registro não existe.
+	 */
 	@Test
 	void delete_WhenNotFound_ShouldThrowResourceNotFound() {
 		when(repository.existsById(5L)).thenReturn(false);
 		assertThrows(ResourceNotFoundException.class, () -> service.delete(5L));
 	}
 
+	/**
+	 * Verifica que a busca por ID retorna a resposta quando encontrada.
+	 */
 	@Test
 	void getById_WhenExists_ShouldReturnResponse() {
 		when(repository.findById(1L)).thenReturn(Optional.of(combustivel));
@@ -89,12 +113,18 @@ class CombustivelServiceTest {
 		assertEquals(combustivel.getPrecoPorLitro(), resp.precoPorLitro());
 	}
 
+	/**
+	 * Verifica que a busca por ID lança exceção quando não encontrada.
+	 */
 	@Test
 	void getById_WhenNotFound_ShouldThrowException() {
 		when(repository.findById(99L)).thenReturn(Optional.empty());
 		assertThrows(ResourceNotFoundException.class, () -> service.getById(99L));
 	}
 
+	/**
+	 * Verifica que a atualização persiste e retorna a resposta.
+	 */
 	@Test
 	void update_ShouldReturnUpdatedResponse() {
 		CombustivelRequest request = new CombustivelRequest("Diesel", new BigDecimal("5.00"));
@@ -110,6 +140,9 @@ class CombustivelServiceTest {
 		assertEquals(new BigDecimal("5.00"), resp.precoPorLitro());
 	}
 
+	/**
+	 * Verifica que a atualização lança exceção quando o registro não existe.
+	 */
 	@Test
 	void update_WhenNotFound_ShouldThrowException() {
 		CombustivelRequest request = new CombustivelRequest("Diesel", new BigDecimal("5.00"));
@@ -117,6 +150,9 @@ class CombustivelServiceTest {
 		assertThrows(ResourceNotFoundException.class, () -> service.update(99L, request));
 	}
 
+	/**
+	 * Verifica que a exclusão funciona quando não há bombas.
+	 */
 	@Test
 	void delete_WhenExistsAndNoBomba_ShouldDeleteSuccessfully() {
 		when(repository.existsById(1L)).thenReturn(true);

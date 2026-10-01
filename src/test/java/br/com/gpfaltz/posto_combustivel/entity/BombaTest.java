@@ -6,8 +6,20 @@ import java.math.BigDecimal;
 import java.lang.reflect.Field;
 import jakarta.persistence.*;
 
+/**
+ * Testes unitários para a entidade {@link Bomba}.
+ * Verifica o padrão builder, getters/setters, equals/hashCode e anotações JPA.
+ *
+ * <p>Exemplo de execução:</p>
+ * <pre>
+ * mvn test -Dtest=BombaTest
+ * </pre>
+ */
 class BombaTest {
 
+    /**
+     * Verifica o padrão builder e os getters/setters.
+     */
     @Test
     void builderAndGettersSetters() {
         Combustivel combustivel = Combustivel.builder()
@@ -25,6 +37,9 @@ class BombaTest {
         assertThat(b.getCombustivel()).isSameAs(combustivel);
     }
 
+    /**
+     * Verifica equals e hashCode.
+     */
     @Test
     void equalsAndHashCode() {
         Combustivel c1 = Combustivel.builder().id(1L).nome("A").precoPorLitro(BigDecimal.ONE).build();
@@ -36,6 +51,9 @@ class BombaTest {
         assertThat(b1).isNotEqualTo(b3);
     }
 
+    /**
+     * Verifica a presença das anotações JPA.
+     */
     @Test
     void jpaAnnotationsPresent() throws Exception {
         assertThat(Bomba.class.isAnnotationPresent(Entity.class)).isTrue();

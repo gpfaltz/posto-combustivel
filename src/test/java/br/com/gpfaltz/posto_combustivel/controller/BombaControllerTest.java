@@ -18,6 +18,15 @@ import java.util.Collections;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+/**
+ * Testes de integração do {@link BombaController}.
+ * Verifica os endpoints de CRUD para bombas.
+ *
+ * <p>Exemplo de execução:</p>
+ * <pre>
+ * mvn test -Dtest=BombaControllerTest
+ * </pre>
+ */
 @WebMvcTest(BombaController.class)
 class BombaControllerTest {
 
@@ -30,6 +39,9 @@ class BombaControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    /**
+     * Testa o endpoint POST /api/bombas.
+     */
     @Test
     void create_ShouldReturnResponse() throws Exception {
         BombaRequest request = new BombaRequest("Bomba X", 1L);
@@ -42,6 +54,9 @@ class BombaControllerTest {
                 .andExpect(jsonPath("$.id").value(1));
     }
 
+    /**
+     * Testa o endpoint GET /api/bombas retornando lista.
+     */
     @Test
     void getAll_ShouldReturnList() throws Exception {
         BombaResponse mockResponse = new BombaResponse(1L, "Bomba X", 1L, "Álcool", new BigDecimal("3.50"));
@@ -51,6 +66,9 @@ class BombaControllerTest {
                 .andExpect(jsonPath("$[0].id").value(1));
     }
 
+    /**
+     * Testa o endpoint GET /api/bombas/{id}.
+     */
     @Test
     void getById_ShouldReturnResponse() throws Exception {
         Long id = 1L;
@@ -62,6 +80,9 @@ class BombaControllerTest {
         Mockito.verify(service).getById(id);
     }
 
+    /**
+     * Testa o endpoint PUT /api/bombas/{id}.
+     */
     @Test
     void update_ShouldReturnResponse() throws Exception {
         Long id = 1L;
@@ -76,6 +97,9 @@ class BombaControllerTest {
         Mockito.verify(service).update(Mockito.eq(id), Mockito.any());
     }
 
+    /**
+     * Testa o endpoint DELETE /api/bombas/{id}.
+     */
     @Test
     void delete_ShouldReturnNoContent() throws Exception {
         Long id = 1L;
@@ -84,6 +108,9 @@ class BombaControllerTest {
         Mockito.verify(service).delete(id);
     }
 
+    /**
+     * Testa o endpoint GET quando a lista está vazia.
+     */
     @Test
     void getAll_EmptyList_ShouldReturnEmptyArray() throws Exception {
         Mockito.when(service.getAll()).thenReturn(Collections.emptyList());

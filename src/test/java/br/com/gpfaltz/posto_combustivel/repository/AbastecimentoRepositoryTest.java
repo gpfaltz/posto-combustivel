@@ -16,6 +16,15 @@ import br.com.gpfaltz.posto_combustivel.entity.Abastecimento;
 import br.com.gpfaltz.posto_combustivel.entity.Bomba;
 import br.com.gpfaltz.posto_combustivel.entity.Combustivel;
 
+/**
+ * Testes de integração para {@link AbastecimentoRepository}.
+ * Verifica persistência e busca de abastecimentos.
+ *
+ * <p>Exemplo de execução:</p>
+ * <pre>
+ * mvn test -Dtest=AbastecimentoRepositoryTest
+ * </pre>
+ */
 @DataJpaTest
 class AbastecimentoRepositoryTest {
 
@@ -28,6 +37,9 @@ class AbastecimentoRepositoryTest {
 	@Autowired
 	private CombustivelRepository combustivelRepository;
 
+	/**
+	 * Verifica que o abastecimento é persistido e pode ser encontrado.
+	 */
 	@Test
 	void saveAndFind_ShouldPersist() {
 		// Persist Combustivel first

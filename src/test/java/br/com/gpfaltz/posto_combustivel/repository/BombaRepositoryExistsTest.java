@@ -12,6 +12,15 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import br.com.gpfaltz.posto_combustivel.entity.Bomba;
 import br.com.gpfaltz.posto_combustivel.entity.Combustivel;
 
+/**
+ * Testes de integração para {@link BombaRepository}.
+ * Verifica a existência de bombas por ID de combustível.
+ *
+ * <p>Exemplo de execução:</p>
+ * <pre>
+ * mvn test -Dtest=BombaRepositoryExistsTest
+ * </pre>
+ */
 @DataJpaTest
 class BombaRepositoryExistsTest {
 
@@ -21,6 +30,9 @@ class BombaRepositoryExistsTest {
     @Autowired
     private CombustivelRepository combustivelRepository;
 
+    /**
+     * Verifica que {@code existsByCombustivelId} retorna true quando há bomba.
+     */
     @Test
     void existsByCombustivelId_ShouldReturnTrueWhenBombaExists() {
         // arrange: persist a combustivel and a bomba linked to it
@@ -40,6 +52,9 @@ class BombaRepositoryExistsTest {
         assertTrue(bombaRepository.existsByCombustivelId(savedCombustivel.getId()));
     }
 
+    /**
+     * Verifica que {@code existsByCombustivelId} retorna false quando não há bomba.
+     */
     @Test
     void existsByCombustivelId_ShouldReturnFalseWhenNoBomba() {
         // use a non‑existent combustivel id

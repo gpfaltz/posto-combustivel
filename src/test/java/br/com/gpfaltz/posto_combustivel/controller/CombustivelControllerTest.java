@@ -18,6 +18,15 @@ import java.util.Collections;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+/**
+ * Testes de integração do {@link CombustivelController}.
+ * Verifica os endpoints de CRUD para combustíveis.
+ *
+ * <p>Exemplo de execução:</p>
+ * <pre>
+ * mvn test -Dtest=CombustivelControllerTest
+ * </pre>
+ */
 @WebMvcTest(CombustivelController.class)
 class CombustivelControllerTest {
 
@@ -30,6 +39,9 @@ class CombustivelControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    /**
+     * Testa o endpoint POST /api/combustiveis.
+     */
     @Test
     void create_ShouldReturnResponse() throws Exception {
         CombustivelRequest request = new CombustivelRequest("Gasolina", new BigDecimal("4.20"));
@@ -42,6 +54,9 @@ class CombustivelControllerTest {
                 .andExpect(jsonPath("$.id").value(1));
     }
 
+    /**
+     * Testa o endpoint GET /api/combustiveis retornando lista.
+     */
     @Test
     void getAll_ShouldReturnList() throws Exception {
         CombustivelResponse mockResponse = new CombustivelResponse(1L, "Gasolina", new BigDecimal("4.20"));
@@ -51,6 +66,9 @@ class CombustivelControllerTest {
                 .andExpect(jsonPath("$[0].id").value(1));
     }
 
+    /**
+     * Testa o endpoint GET /api/combustiveis/{id}.
+     */
     @Test
     void getById_ShouldReturnResponse() throws Exception {
         Long id = 1L;
@@ -62,6 +80,9 @@ class CombustivelControllerTest {
         Mockito.verify(service).getById(id);
     }
 
+    /**
+     * Testa o endpoint PUT /api/combustiveis/{id}.
+     */
     @Test
     void update_ShouldReturnResponse() throws Exception {
         Long id = 1L;
@@ -76,6 +97,9 @@ class CombustivelControllerTest {
         Mockito.verify(service).update(Mockito.eq(id), Mockito.any());
     }
 
+    /**
+     * Testa o endpoint DELETE /api/combustiveis/{id}.
+     */
     @Test
     void delete_ShouldReturnNoContent() throws Exception {
         Long id = 1L;
@@ -84,6 +108,9 @@ class CombustivelControllerTest {
         Mockito.verify(service).delete(id);
     }
 
+    /**
+     * Testa o endpoint GET quando a lista está vazia.
+     */
     @Test
     void getAll_EmptyList_ShouldReturnEmptyArray() throws Exception {
         Mockito.when(service.getAll()).thenReturn(Collections.emptyList());
